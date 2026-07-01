@@ -1,13 +1,20 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const path = require('path'); // Agrega esta línea arriba
+const path = require('path');
+const { computeExecutablePath } = require('@puppeteer/browsers');
+
+// Esto autodetecta la ruta exacta del Chrome instalado localmente
+const chromePath = computeExecutablePath({
+    cacheDir: path.join(__dirname, '.local-chromium'),
+    browser: 'chrome',
+    buildId: '146.0.7680.31' // La versión exacta que descargó tu script
+});
 
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
         headless: true,
-        // Esta línea le dice al bot que busque Chrome dentro de la carpeta del proyecto:
-        executablePath: path.join(__dirname, '.local-chromium', 'linux-146.0.7680.31', 'chrome-linux', 'chrome'), 
+        executablePath: chromePath, // Usa la ruta dinámica autodetectada
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
