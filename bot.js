@@ -1,20 +1,12 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const path = require('path');
-const { computeExecutablePath } = require('@puppeteer/browsers');
-
-// Esto autodetecta la ruta exacta del Chrome instalado localmente
-const chromePath = computeExecutablePath({
-    cacheDir: path.join(__dirname, '.local-chromium'),
-    browser: 'chrome',
-    buildId: '146.0.7680.31' // La versión exacta que descargó tu script
-});
 
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
         headless: true,
-        executablePath: chromePath, // Usa la ruta dinámica autodetectada
+        // Toma automáticamente la ruta /usr/bin/chromium configurada en el Dockerfile
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -27,14 +19,15 @@ const client = new Client({
         ]
     }
 });
-// Genera el código QR en la consola para escanearlo con el celular
+
+// Manejo del código QR
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
     console.log('Escanea este código QR con tu WhatsApp Business:');
 });
 
 client.on('ready', () => {
-    console.log('¡El Bot de WhatsApp está activo y escuchando!');
+    console.log('¡El bot está listo y conectado!');
 });
 
 // Escuchar los mensajes entrantes
