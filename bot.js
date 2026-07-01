@@ -21,13 +21,26 @@ const client = new Client({
 });
 
 // Manejo del código QR
-client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-    console.log('Escanea este código QR con tu WhatsApp Business:');
-});
+const qrImage = require('qr-image');
+const fs = require('fs');
+const path = require('path');
 
-client.on('ready', () => {
-    console.log('¡El bot está listo y conectado!');
+// Reemplaza tu evento anterior de QR por este:
+client.on('qr', (qr) => {
+    try {
+        // 1. Genera una imagen limpia del QR en la carpeta del proyecto
+        const qr_svg = qrImage.image(qr, { type: 'png' });
+        const qrPath = path.join(__dirname, 'codigo-qr.png');
+        qr_svg.pipe(fs.createWriteStream(qrPath));
+        
+        console.log('====================================================');
+        console.log('¡QR GENERADO EN ARCHIVO!');
+        console.log('Busca el archivo "codigo-qr.png" en la pestaña "Console"');
+        console.log('o ábrelo directamente desde la pestaña de archivos de Railway.');
+        console.log('====================================================');
+    } catch (err) {
+        console.error('Error generando imagen QR:', err);
+    }
 });
 
 // Escuchar los mensajes entrantes
