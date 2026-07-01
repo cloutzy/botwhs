@@ -5,7 +5,7 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "build": "npm install && npx puppeteer browsers install chrome"
+    "build": "npm install && PUPPETEER_CACHE_DIR=./.local-chromium npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "whatsapp-web.js": "^1.26.0",
