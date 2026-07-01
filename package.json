@@ -1,0 +1,14 @@
+{
+  "name": "botwhs",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp para horarios y recibos",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "build": "npm install && npx puppeteer browsers install chrome"
+  },
+  "dependencies": {
+    "whatsapp-web.js": "^1.26.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
